@@ -6,3 +6,4 @@ package-lock.json
 supabase/.temp
 especificacion-app-rally.md
 docs
+supabase/functions/deno.lock

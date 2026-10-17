@@ -24,6 +24,10 @@ type Props = {
   lineas: LineaMapa[]
   /** Marca la largada y la llegada de cada línea. */
   marcarExtremos?: boolean
+  /** Punto a destacar (por ejemplo, la ubicación elegida por el aficionado). */
+  punto?: [number, number] | null
+  /** Si se pasa, tocar el mapa devuelve la coordenada [lon, lat]. */
+  alTocar?: (coordenada: [number, number]) => void
   className?: string
 }
 
@@ -35,11 +39,23 @@ setWorkerUrl(urlWorker)
  * Mapa con uno o más trazados. Se carga de forma diferida (React.lazy) porque
  * MapLibre pesa ~800 kB y solo lo necesitan algunas pantallas.
  */
-export default function MapaTrazados({ lineas, marcarExtremos = false, className = '' }: Props) {
+export default function MapaTrazados({
+  lineas,
+  marcarExtremos = false,
+  punto = null,
+  alTocar,
+  className = '',
+}: Props) {
   const contenedor = useRef<HTMLDivElement>(null)
   const mapa = useRef<MapLibre | null>(null)
   const marcadores = useRef<Marker[]>([])
+  const marcadorPunto = useRef<Marker | null>(null)
+  const alTocarActual = useRef(alTocar)
   const [listo, setListo] = useState(false)
+
+  useEffect(() => {
+    alTocarActual.current = alTocar
+  })
 
   useEffect(() => {
     if (!contenedor.current) return
@@ -51,6 +67,7 @@ export default function MapaTrazados({ lineas, marcarExtremos = false, className
       attributionControl: { compact: true },
     })
     m.addControl(new NavigationControl({ showCompass: false }), 'top-right')
+    m.on('click', (e) => alTocarActual.current?.([e.lngLat.lng, e.lngLat.lat]))
     // 'style.load' y no 'load': no hace falta esperar las teselas para dibujar el trazado.
     m.once('style.load', () => {
       m.addSource(FUENTE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
@@ -128,12 +145,21 @@ export default function MapaTrazados({ lineas, marcarExtremos = false, className
     }
   }, [lineas, marcarExtremos, listo])
 
+  useEffect(() => {
+    const m = mapa.current
+    if (!m || !listo) return
+    marcadorPunto.current?.remove()
+    marcadorPunto.current = punto
+      ? new Marker({ color: '#2563eb' }).setLngLat(punto).addTo(m)
+      : null
+  }, [punto, listo])
+
   return (
     <div
       ref={contenedor}
       role="region"
       aria-label="Mapa de trazados"
-      className={`h-72 w-full overflow-hidden rounded-xl border border-gray-200 ${className}`}
+      className={`h-72 w-full overflow-hidden rounded-xl border border-gray-200 ${alTocar ? 'cursor-crosshair' : ''} ${className}`}
     />
   )
 }

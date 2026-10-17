@@ -150,7 +150,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 > - Probar el panel contra un Supabase real (local con Docker o en la nube).
 > - Configurar SMTP (Brevo o Resend) en el proyecto en la nube para los enlaces mágicos. En local, los correos llegan a Inbucket.
 
-### Fase 3 — Envío de publicaciones
+### Fase 3 — Envío de publicaciones ✔️ completada (2026-10-17), salvo el spike en vivo
 1. **Spike (primera tarea):** probar desde una Edge Function desplegada la resolución de `vm.tiktok.com` y `youtu.be`, oEmbed y el vencimiento de la miniatura. Resultado en `docs/01-riesgos-validados.md`.
    - Si TikTok bloquea: pedirle al usuario el enlace largo, con un mensaje de ayuda, y resolver en el cliente cuando sea posible.
 2. `_shared/urls.ts`: `validarDominio`, `normalizar` (canónica más `id_externo`, para shorts, `watch`, `live` y `/video/`) y `esEnlaceCorto`.
@@ -169,6 +169,19 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 - Playwright: envío completo en un viewport móvil en menos de 30 s y envío duplicado.
 
 ✅ Los criterios 1 y 2 de §13 se cumplen.
+
+> **Estado:**
+> - `_shared/urls.ts` normaliza las URL (43 pruebas) y `_shared/envio.ts` aplica las reglas de §6 como función pura (28 pruebas).
+> - La Edge Function `enviar-publicacion` pasa `deno check` y `deno lint`, que ahora corren en un job de la CI.
+> - Pantalla de envío en 3 pasos:
+>   - con GPS, preselecciona el tramo más cercano;
+>   - sin permiso de ubicación, deja marcar el punto en el mapa;
+>   - usa Turnstile para la sesión anónima y para cada envío;
+>   - recuerda el alias.
+> - e2e con servicios simulados: envío en menos de 30 s, duplicado, validación inmediata y modo manual.
+> - **Cambio de modelo:** la unicidad de URL e id externo pasa a ser por evento (migración `…0900`). Así una transmisión en vivo se puede registrar en otra fecha, y dentro del mismo evento se renueva en lugar de duplicarse.
+>
+> **Pendiente (requiere el proyecto en la nube):** el spike real. Falta comprobar si TikTok bloquea la resolución de `vm.tiktok.com` desde Supabase y si vence el `thumbnail_url` de oEmbed. Si TikTok bloquea, la función ya responde pidiendo el enlace completo.
 
 ### Fase 4 — Panel de moderación
 1. Cola de pendientes (la más antigua primero) con `LazyEmbed` (ya cargado en esta vista), km, distancia y alertas: lejos del trazado, ubicación manual, en vivo.
