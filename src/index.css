@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-marca: #f59e0b;
+  --color-marca-oscuro: #b45309;
+  --color-fondo: #f9fafb;
+  --color-tinta: #111827;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-fondo text-tinta antialiased;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
