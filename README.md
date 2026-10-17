@@ -17,16 +17,18 @@ cp .env.example .env.local
 npm run dev
 ```
 
-| Comando                        | Qué hace                                        |
-| ------------------------------ | ----------------------------------------------- |
-| `npm run dev`                  | Servidor de desarrollo en http://localhost:5173 |
-| `npm run build`                | Typecheck y build de producción en `dist/`      |
-| `npm run lint`                 | ESLint                                          |
-| `npm run format`               | Prettier                                        |
-| `npm test`                     | Pruebas unitarias (Vitest)                      |
-| `npm run e2e`                  | Pruebas de punta a punta (Playwright, móvil)    |
-| `npm run supabase -- start`    | Supabase local (requiere Docker)                |
-| `npm run supabase -- db reset` | Aplica migraciones y seed en local              |
+| Comando                        | Qué hace                                            |
+| ------------------------------ | --------------------------------------------------- |
+| `npm run dev`                  | Servidor de desarrollo en http://localhost:5173     |
+| `npm run build`                | Typecheck y build de producción en `dist/`          |
+| `npm run lint`                 | ESLint                                              |
+| `npm run format`               | Prettier                                            |
+| `npm test`                     | Pruebas unitarias (Vitest)                          |
+| `npm run e2e`                  | Pruebas de punta a punta (Playwright, móvil)        |
+| `npm run db:validar`           | Migraciones, seed y pgTAP sobre PGlite (sin Docker) |
+| `npm run supabase -- start`    | Supabase local (requiere Docker)                    |
+| `npm run supabase -- db reset` | Aplica migraciones y seed en local                  |
+| `npm run supabase -- test db`  | Pruebas pgTAP en el Supabase local (Docker)         |
 
 ## Estructura
 

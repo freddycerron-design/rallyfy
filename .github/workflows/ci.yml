@@ -19,6 +19,7 @@ jobs:
       - run: npm run format:check
       - run: npm run typecheck
       - run: npm test
+      - run: npm run db:validar
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
       - uses: actions/upload-artifact@v4
@@ -27,3 +28,14 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 7
+
+  # Pruebas pgTAP contra el Postgres real de Supabase (con Docker, disponible en Actions).
+  base-de-datos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase db start
+      - run: supabase test db

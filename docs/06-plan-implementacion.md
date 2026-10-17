@@ -96,7 +96,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 
 ✅ `npm run dev` levanta la app, y la CI corre en verde con un repo vacío de lógica.
 
-### Fase 1 — Migraciones, RLS y seed
+### Fase 1 — Migraciones, RLS y seed ✔️ completada (2026-10-17)
 1. `0001`: extensión `postgis` y enums (`plataforma`, `estado_publicacion`, `estado_tramo`, `rol`, `origen_ubicacion`).
 2. `0002`: tablas de §5 con constraints. Incluye el índice único parcial `eventos(activo) WHERE activo`, un GIST en `trazado` y `ubicacion`, y un GIN en `autos`.
 3. `0003`: triggers.
@@ -107,7 +107,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
    - Contador de `votos`.
 4. `0004`: funciones `es_moderador()` y `es_admin()`, la creación automática del perfil al registrarse (trigger en `auth.users`) y las políticas RLS de todas las tablas.
 5. `0005`: vistas `muro_publico`, `ultimo_visto_por_auto` y `tramos_publicos` (con el conteo de aprobadas y el estado derivado).
-6. `0006`: RPC `moderar_publicacion(id, accion, motivo, tramo_id?, autos?)`, `votar(id)`, `quitar_voto(id)` y `promover_moderador(email, rol)` (solo admin).
+6. `0006`: RPC `moderar_publicacion(id, accion, motivo, tramo_id?, autos?)`, `votar(id)`, `quitar_voto(id)`, `cambiar_rol(email, rol)` y `listar_equipo()` (las dos últimas solo admin).
 7. `0007`: trigger de broadcast de Realtime (§3.3).
 8. `seed.sql`: 1 evento activo, 2 tramos reales, 15 inscritos, unas 20 publicaciones en los 3 estados (alguna lejos del trazado, alguna manual y alguna en vivo).
 9. `docs/03-matriz-rls.md` y pruebas pgTAP que la recorren.
@@ -119,6 +119,10 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 - El km se calcula bien en un tramo conocido y el contador de votos funciona.
 
 ✅ `supabase db reset` aplica todo y carga el seed, y `supabase test db` pasa en verde.
+
+> **Estado:** con `npm run db:validar` (PGlite + PostGIS, sin Docker) se aplican las 7 migraciones y el seed, y pasan 71 de 71 aserciones pgTAP. Una prueba de mutación (abrir permisos a propósito) confirmó que las pruebas detectan las fugas. **Queda pendiente** confirmar `supabase test db` contra el Postgres real de Supabase: lo hace el job `base-de-datos` de la CI en el primer push, o en local cuando esté instalado Docker.
+>
+> **Seed:** los trazados son sintéticos; se reemplazan cuando estén los GPX reales.
 
 ### Fase 2 — Administración
 1. Login con enlace mágico (configurar SMTP), `RutaProtegida` según el rol y gestión de la sesión.
