@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it } from 'vitest'
@@ -5,7 +6,11 @@ import { rutas } from './router'
 
 function renderEn(ruta: string) {
   const router = createMemoryRouter(rutas, { initialEntries: [ruta] })
-  render(<RouterProvider router={router} />)
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>,
+  )
 }
 
 describe('router', () => {
@@ -15,12 +20,21 @@ describe('router', () => {
     ['/mapa', 'Mapa'],
     ['/auto/7', 'Ficha del auto'],
     ['/enviar', 'Enviar mi video'],
-    ['/moderacion', 'Moderación'],
-    ['/admin', 'Administración'],
   ])('muestra la página de %s', (ruta, titulo) => {
     renderEn(ruta)
     expect(screen.getByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
   })
+
+  it.each(['/moderacion', '/admin', '/admin/equipo', '/admin/evento/abc'])(
+    'pide iniciar sesión en %s',
+    async (ruta) => {
+      renderEn(ruta)
+      expect(
+        await screen.findByRole('heading', { level: 1, name: 'Acceso para el equipo' }),
+      ).toBeInTheDocument()
+      expect(screen.getByLabelText('Correo')).toBeInTheDocument()
+    },
+  )
 
   it('muestra 404 en rutas desconocidas', () => {
     renderEn('/no-existe')

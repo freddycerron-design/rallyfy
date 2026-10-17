@@ -12,6 +12,10 @@ export default defineConfig({
       '@shared': fileURLToPath(new URL('./supabase/functions/_shared', import.meta.url)),
     },
   },
+  build: {
+    // MapLibre (~1 MB) va en un chunk propio que se descarga solo al abrir un mapa.
+    chunkSizeWarningLimit: 1100,
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],

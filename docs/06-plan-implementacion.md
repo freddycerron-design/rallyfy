@@ -124,7 +124,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 >
 > **Seed:** los trazados son sintéticos; se reemplazan cuando estén los GPX reales.
 
-### Fase 2 — Administración
+### Fase 2 — Administración ✔️ completada (2026-10-17)
 1. Login con enlace mágico (configurar SMTP), `RutaProtegida` según el rol y gestión de la sesión.
 2. CRUD del evento y botón "activar". El índice único garantiza que haya uno solo activo.
 3. Carga de tramos:
@@ -138,6 +138,17 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 🧪 Vitest para el parser de tramos (varios segmentos, inversión) y el validador de CSV.
 
 ✅ Desde el panel se crea un evento completo equivalente al seed.
+
+> **Estado:**
+> - Panel en `/admin`, `/admin/evento/:id` y `/admin/equipo`, con carga diferida. `/moderacion` exige sesión de moderador.
+> - Nueva RPC `activar_evento`, que cambia el evento activo en una sola operación, con 8 pruebas pgTAP.
+> - Parsers de GPX, KML y GeoJSON y de CSV, con 17 pruebas Vitest.
+> - e2e de Playwright contra una API de Supabase simulada: alta de tramo con mapa e inversión de sentido, e importación de CSV con errores.
+> - Se corrigió el worker de MapLibre 6 (`setWorkerUrl`), que no se encontraba al empaquetar.
+>
+> **Pendiente:**
+> - Probar el panel contra un Supabase real (local con Docker o en la nube).
+> - Configurar SMTP (Brevo o Resend) en el proyecto en la nube para los enlaces mágicos. En local, los correos llegan a Inbucket.
 
 ### Fase 3 — Envío de publicaciones
 1. **Spike (primera tarea):** probar desde una Edge Function desplegada la resolución de `vm.tiktok.com` y `youtu.be`, oEmbed y el vencimiento de la miniatura. Resultado en `docs/01-riesgos-validados.md`.
