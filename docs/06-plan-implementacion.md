@@ -120,7 +120,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 
 ✅ `supabase db reset` aplica todo y carga el seed, y `supabase test db` pasa en verde.
 
-> **Estado:** con `npm run db:validar` (PGlite + PostGIS, sin Docker) se aplican las 7 migraciones y el seed, y pasan 71 de 71 aserciones pgTAP. Una prueba de mutación (abrir permisos a propósito) confirmó que las pruebas detectan las fugas. **Queda pendiente** confirmar `supabase test db` contra el Postgres real de Supabase: lo hace el job `base-de-datos` de la CI en el primer push, o en local cuando esté instalado Docker.
+> **Estado:** con `npm run db:validar` (PGlite + PostGIS, sin Docker) se aplican las 7 migraciones y el seed, y pasan 71 de 71 aserciones pgTAP. Una prueba de mutación (abrir permisos a propósito) confirmó que las pruebas detectan las fugas. `supabase test db` contra el Postgres real de Supabase también pasó en la CI (job `base-de-datos`, ejecución 39076332231).
 >
 > **Seed:** los trazados son sintéticos; se reemplazan cuando estén los GPX reales.
 
