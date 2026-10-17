@@ -37,7 +37,8 @@ $$;
 create trigger tramos_recalcular_publicaciones_trg
   after update of trazado on public.tramos
   for each row
-  when (old.trazado is distinct from new.trazado)
+  -- Se comparan los bytes: `geometry = geometry` es ambiguo con PostGIS en el esquema extensions.
+  when (extensions.st_asewkb(old.trazado) is distinct from extensions.st_asewkb(new.trazado))
   execute function public.tramos_recalcular_publicaciones();
 
 -- ---------------------------------------------------------------------------
