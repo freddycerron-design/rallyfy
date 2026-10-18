@@ -127,3 +127,55 @@ export function useMuroEnTiempoReal(eventoId: string | undefined): boolean {
 
   return !conectado
 }
+
+/** Todas las publicaciones aprobadas del evento, para los pines del mapa. */
+export function useMuroEvento(eventoId: string | undefined, sondeo: boolean) {
+  return useQuery({
+    queryKey: ['muro', eventoId, 'evento'],
+    enabled: !!eventoId,
+    refetchInterval: sondeo ? SONDEO_MS : false,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('muro_publico')
+        .select('*')
+        .eq('evento_id', eventoId!)
+        .limit(2000)
+      if (error) throw error
+      return data as PublicacionMuro[]
+    },
+  })
+}
+
+/** Fila de `ultimo_visto_por_auto`: el punto es la proyección sobre el trazado. */
+export type UltimoVisto = {
+  numero: number
+  piloto: string
+  copiloto: string | null
+  auto: string | null
+  clase: string | null
+  publicacion_id: string
+  tramo_id: string
+  tramo_codigo: string
+  tramo_orden: number
+  km_en_tramo: number | null
+  punto_lon: number | null
+  punto_lat: number | null
+  hora_captura: string
+}
+
+export function useUltimosVistos(eventoId: string | undefined, sondeo: boolean) {
+  return useQuery({
+    queryKey: ['muro', eventoId, 'ultimo-visto'],
+    enabled: !!eventoId,
+    refetchInterval: sondeo ? SONDEO_MS : false,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('ultimo_visto_por_auto')
+        .select('*')
+        .eq('evento_id', eventoId!)
+        .order('numero')
+      if (error) throw error
+      return data as UltimoVisto[]
+    },
+  })
+}

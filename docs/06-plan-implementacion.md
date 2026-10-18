@@ -229,7 +229,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 >
 > **Nota:** el contador de votos se muestra, pero votar llega en la Fase 7.
 
-### Fase 6 — Mapa
+### Fase 6 — Mapa ✔️ completada (2026-10-17)
 1. `MapaBase`: MapLibre con OpenFreeMap (configurable) y atribución.
 2. Capa de trazados con etiquetas de código y pines desde `muro_publico.punto_publico`, con `cluster: true`.
 3. Tocar un pin abre la tarjeta en una hoja inferior.
@@ -238,6 +238,15 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 🧪 Prueba (pgTAP o e2e) de que la respuesta del mapa no contiene la coordenada original del seed.
 
 ✅ El criterio 5 de §13 se cumple.
+
+> **Estado:**
+> - Mapa del evento con trazados y pines desde `muro_publico.punto_lon/lat` (la proyección sobre el trazado), agrupados con clustering; tocar un grupo acerca el mapa.
+> - Hoja inferior con la tarjeta del video y modo "Último visto". Los autos que comparten punto van en un solo marcador ("3 · 7").
+> - Modo guardado en la URL y lista accesible con el mismo contenido que el mapa.
+> - Base común de MapLibre en `components/mapa/base.ts`.
+> - e2e: lista, hoja, marcadores de autos y que el mapa nunca consulte la tabla `publicaciones`.
+>
+> **Sin verificar:** tocar los pines dibujados con WebGL. Se revisó con capturas, pero no se puede automatizar por rol accesible.
 
 ### Fase 7 — Votos y "En vivo ahora"
 1. Botón de voto optimista con las RPC `votar` y `quitar_voto`, y el límite de 60 por hora en la RPC.
