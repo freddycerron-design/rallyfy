@@ -117,7 +117,7 @@ function analizarTiktok(url: URL, host: string): UrlAnalizada {
   // Enlaces cortos: vm.tiktok.com/XXXX, vt.tiktok.com/XXXX, tiktok.com/t/XXXX
   if (host === 'vm.tiktok.com' || host === 'vt.tiktok.com' || partes[0] === 't') {
     const codigo = host === 'tiktok.com' ? partes[1] : partes[0]
-    if (!codigo || !/^[A-Za-z0-9]+$/.test(codigo)) {
+    if (!codigo || !/^[A-Za-z0-9_-]{4,40}$/.test(codigo)) {
       throw new ErrorUrl('no_reconocida', 'El enlace corto de TikTok está incompleto.')
     }
     return {
@@ -184,7 +184,19 @@ export async function resolverEnlaceCorto(
     if (!esDominioPermitido(siguiente.hostname)) {
       throw new ErrorUrl('dominio', 'El enlace corto lleva a un sitio que no es TikTok.')
     }
-    const analizada = analizarUrl(siguiente.href)
+    let analizada: UrlAnalizada
+    try {
+      analizada = analizarUrl(siguiente.href)
+    } catch (e) {
+      // Un código vencido o mal copiado redirige a la portada u otra página de TikTok.
+      if (e instanceof ErrorUrl && e.codigo === 'no_reconocida') {
+        throw new ErrorUrl(
+          'no_reconocida',
+          'El enlace corto no lleva a un video de TikTok. Revisa que esté completo o pega el enlace del video.',
+        )
+      }
+      throw e
+    }
     if (analizada.tipo === 'video') return analizada
     actual = analizada.url
   }

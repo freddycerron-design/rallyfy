@@ -77,6 +77,8 @@ describe('analizarUrl · TikTok', () => {
   it.each([
     ['https://vm.tiktok.com/ZMabc123/', 'https://vm.tiktok.com/ZMabc123/'],
     ['https://vt.tiktok.com/ZSxyz', 'https://vt.tiktok.com/ZSxyz/'],
+    // Código real con guion (los nuevos enlaces cortos lo usan)
+    ['https://vt.tiktok.com/ZS9UaHaodEtrj-3qXBa/', 'https://vt.tiktok.com/ZS9UaHaodEtrj-3qXBa/'],
     ['https://www.tiktok.com/t/ZT8abc/', 'https://www.tiktok.com/t/ZT8abc/'],
     [
       'Mira este video de TikTok https://vm.tiktok.com/ZMabc123/ #rally',
@@ -150,6 +152,13 @@ describe('resolverEnlaceCorto', () => {
     const fetchFn = vi.fn().mockResolvedValue(redireccion('https://phishing.example/login'))
     await expect(resolverEnlaceCorto('https://vm.tiktok.com/ZMabc/', fetchFn)).rejects.toThrow(
       expect.objectContaining({ codigo: 'dominio' }),
+    )
+  })
+
+  it('avisa si el enlace corto redirige a una página que no es un video', async () => {
+    const fetchFn = vi.fn().mockResolvedValue(redireccion('https://www.tiktok.com/'))
+    await expect(resolverEnlaceCorto('https://vm.tiktok.com/ZMvencido/', fetchFn)).rejects.toThrow(
+      'El enlace corto no lleva a un video de TikTok',
     )
   })
 
