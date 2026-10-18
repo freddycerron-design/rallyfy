@@ -17,7 +17,7 @@ import {
   useEnviarPublicacion,
 } from './api'
 import { SeccionUbicacionTramo } from './SeccionUbicacionTramo'
-import { SelectorAutos } from './SelectorAutos'
+import { SelectorAutos } from '@/components/SelectorAutos'
 import { VistaPreviaEnlace } from './VistaPreviaEnlace'
 
 export function PaginaEnvio() {

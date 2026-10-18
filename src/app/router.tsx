@@ -23,6 +23,7 @@ export const rutas: RouteObject[] = [
       // Pantallas del equipo: se descargan solo cuando se visitan.
       {
         path: 'moderacion',
+        handle: { ancho: 'amplio' },
         lazy: async () => ({
           Component: (await import('@/features/moderacion/PaginaModeracion')).PaginaModeracion,
         }),

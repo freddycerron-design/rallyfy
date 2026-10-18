@@ -15,7 +15,7 @@ export default defineConfig({
   // Mobile-first: el escenario principal es un celular en el borde del camino.
   projects: [{ name: 'movil', use: { ...devices['Pixel 7'] } }],
   webServer: {
-    command: `npm run build && npm run preview -- --port ${puerto} --strictPort`,
+    command: `npx vite build --mode e2e && npx vite preview --port ${puerto} --strictPort`,
     url: `http://localhost:${puerto}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

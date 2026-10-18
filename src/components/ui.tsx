@@ -6,12 +6,13 @@ import type {
 } from 'react'
 import { useId } from 'react'
 
-type VarianteBoton = 'primario' | 'secundario' | 'peligro'
+type VarianteBoton = 'primario' | 'secundario' | 'peligro' | 'exito'
 
 const estilosBoton: Record<VarianteBoton, string> = {
   primario: 'bg-tinta text-white hover:bg-gray-800 disabled:bg-gray-400',
   secundario: 'border border-gray-300 bg-white text-tinta hover:bg-gray-50 disabled:text-gray-400',
   peligro: 'border border-red-300 bg-white text-red-700 hover:bg-red-50 disabled:text-red-300',
+  exito: 'bg-green-700 text-white hover:bg-green-800 disabled:bg-gray-400',
 }
 
 export function Boton({

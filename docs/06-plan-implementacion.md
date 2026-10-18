@@ -183,7 +183,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 >
 > **Spike real hecho** (ver `docs/01-riesgos-validados.md`): TikTok no bloquea a Supabase y los enlaces cortos se resuelven. Se corrigieron dos errores que solo aparecieron contra servicios reales. Sigue pendiente el vencimiento de miniaturas de oEmbed.
 
-### Fase 4 — Panel de moderación
+### Fase 4 — Panel de moderación ✔️ completada (2026-10-17)
 1. Cola de pendientes (la más antigua primero) con `LazyEmbed` (ya cargado en esta vista), km, distancia y alertas: lejos del trazado, ubicación manual, en vivo.
 2. Acciones: aprobar, rechazar con motivo predefinido (duplicado, no es del evento, contenido inapropiado, sin autos visibles, otro) y corregir el tramo o los autos (recalcula el km).
 3. Atajos de teclado: A, R, J/K para navegar, y el foco gestionado para que el panel sea accesible.
@@ -193,6 +193,17 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 🧪 Pruebas de componentes de los atajos. pgTAP de la RPC de moderación por rol.
 
 ✅ Dos moderadores en paralelo ven la cola actualizada sin recargar.
+
+> **Estado:**
+> - Cola de pendientes (la más antigua primero) con video, km, autos y alertas: lejos del trazado, ubicación manual, en vivo y sin autos.
+> - Acciones: aprobar, rechazar con 5 motivos, corregir tramo o autos (con o sin aprobar) y cerrar una transmisión en vivo.
+> - Atajos A, R + 1–5, E, J/K y Esc, que se ignoran mientras se escribe en un campo.
+> - Tiempo real con `postgres_changes` por evento, que refresca la cola cuando otro moderador actúa.
+> - Componente `Video` compartido (carga diferida o de entrada; en vivo como tarjeta) para el muro de la Fase 5.
+> - Pruebas: 24 unitarias (atajos y URLs de video) y 4 e2e con estado.
+> - Las e2e ahora usan `vite --mode e2e` (`.env.e2e`), así nunca apuntan al proyecto real aunque exista `.env.local`.
+>
+> **Sin verificar:** dos moderadores reales en paralelo con Realtime contra la nube; las e2e no levantan el websocket.
 
 ### Fase 5 — Inicio, muro del tramo y ficha del auto
 1. Inicio: evento activo y lista de tramos con conteo y estado, más el botón destacado "Enviar mi video".
