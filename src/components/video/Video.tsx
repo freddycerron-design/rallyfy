@@ -21,6 +21,7 @@ type Props = VideoRef & {
  */
 export function Video(props: Props) {
   const [activo, setActivo] = useState(props.cargarDeEntrada ?? false)
+  const [miniaturaRota, setMiniaturaRota] = useState(false)
   const vertical = props.plataforma === 'tiktok'
   const marco = vertical
     ? 'mx-auto aspect-[9/16] max-h-[70vh] w-full max-w-sm'
@@ -44,7 +45,7 @@ export function Video(props: Props) {
     )
   }
 
-  const miniatura = urlMiniatura(props)
+  const miniatura = miniaturaRota ? null : urlMiniatura(props)
   return (
     <button
       type="button"
@@ -59,11 +60,13 @@ export function Video(props: Props) {
           className="size-full object-cover opacity-90"
           loading="lazy"
           decoding="async"
+          onError={() => setMiniaturaRota(true)}
         />
       ) : (
         <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 p-4 text-center">
           <span className="text-sm text-gray-300">
-            TikTok{props.autor ? ` · ${props.autor}` : ''}
+            {nombrePlataforma(props.plataforma)}
+            {props.autor ? ` · ${props.autor}` : ''}
           </span>
           {props.titulo && <span className="line-clamp-2 font-medium">{props.titulo}</span>}
         </span>

@@ -205,7 +205,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 >
 > **Sin verificar:** dos moderadores reales en paralelo con Realtime contra la nube; las e2e no levantan el websocket.
 
-### Fase 5 — Inicio, muro del tramo y ficha del auto
+### Fase 5 — Inicio, muro del tramo y ficha del auto ✔️ completada (2026-10-17)
 1. Inicio: evento activo y lista de tramos con conteo y estado, más el botón destacado "Enviar mi video".
 2. `LazyEmbed` y `TarjetaPublicacion` (miniatura con botón de reproducir; el iframe se carga recién al tocar).
 3. Muro: orden por km, hora o votos (guardado en la URL), filtro por auto y sección "En vivo ahora" (`en_vivo_hasta > now()`).
@@ -215,6 +215,19 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 🧪 Playwright: el orden por km respeta el recorrido y una publicación pendiente no aparece.
 
 ✅ Los criterios 3 y 4 de §13 se cumplen.
+
+> **Estado:**
+> - **Inicio:** evento, acceso destacado a "Enviar mi video" y tramos con estado y cantidad de videos.
+> - **Muro:** orden por km, por hora o por votos y filtro por auto, guardados en la URL; sección "En vivo ahora" con tarjetas que abren la red social.
+> - **Ficha del auto:** tripulación, último visto y videos por tramo y km.
+> - Carga diferida del video: miniatura y luego iframe; si la miniatura falla, se oculta.
+> - Tiempo real público con Broadcast `muro:{evento}`, con sondeo cada 30 s si no conecta o si `VITE_REALTIME_PUBLICO=false`.
+> - Pruebas: unitarias del orden (`lib/muro.test.ts`) y 4 e2e con API simulada.
+> - El criterio "lo pendiente no aparece" lo garantiza la vista (pgTAP 01).
+>
+> **Sin verificar:** recibir el Broadcast real cuando un moderador aprueba en la nube.
+>
+> **Nota:** el contador de votos se muestra, pero votar llega en la Fase 7.
 
 ### Fase 6 — Mapa
 1. `MapaBase`: MapLibre con OpenFreeMap (configurable) y atribución.

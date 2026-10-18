@@ -1,7 +1,7 @@
 import { Boton, Tarjeta } from '@/components/ui'
 import type { TramoPublico } from '@/lib/tipos'
 import type { Pendiente } from './api'
-import { horaCorta } from './formato'
+import { horaCorta } from '@/lib/formato'
 
 type Props = {
   transmisiones: Pendiente[]

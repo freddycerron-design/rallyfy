@@ -15,14 +15,17 @@ function renderEn(ruta: string) {
 
 describe('router', () => {
   it.each([
-    ['/', 'Fecha en curso'],
-    ['/tramo/abc', 'Muro del tramo'],
     ['/mapa', 'Mapa'],
-    ['/auto/7', 'Ficha del auto'],
     ['/enviar', 'Enviar mi video'],
   ])('muestra la página de %s', (ruta, titulo) => {
     renderEn(ruta)
     expect(screen.getByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
+  })
+
+  it.each(['/', '/tramo/abc', '/auto/7'])('%s carga datos sin caer en 404', (ruta) => {
+    renderEn(ruta)
+    expect(screen.getByRole('status')).toHaveTextContent('Cargando')
+    expect(screen.queryByText('Página no encontrada')).not.toBeInTheDocument()
   })
 
   it.each(['/moderacion', '/admin', '/admin/equipo', '/admin/evento/abc'])(

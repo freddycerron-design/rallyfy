@@ -3,7 +3,7 @@ import { RutaProtegida } from '@/components/RutaProtegida'
 import { Aviso, Cargando } from '@/components/ui'
 import { mensajeError } from '@/lib/errores'
 import { useEvento } from './api'
-import { formatearFecha } from './formato'
+import { formatearFecha } from '@/lib/formato'
 import { SeccionInscritos } from './inscritos/SeccionInscritos'
 import { SeccionTramos } from './tramos/SeccionTramos'
 

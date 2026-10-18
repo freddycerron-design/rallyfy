@@ -5,7 +5,7 @@ import { Aviso, Boton, Campo, Cargando, Tarjeta } from '@/components/ui'
 import { mensajeError } from '@/lib/errores'
 import { supabase } from '@/lib/supabase'
 import { useActivarEvento, useCrearEvento, useEventos } from './api'
-import { formatearFecha } from './formato'
+import { formatearFecha } from '@/lib/formato'
 
 export function PaginaAdmin() {
   return (

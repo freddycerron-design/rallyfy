@@ -3,7 +3,7 @@ import { MapaTrazados } from '@/components/mapa'
 import { Aviso, Boton, Campo, Cargando, Tarjeta } from '@/components/ui'
 import { mensajeError } from '@/lib/errores'
 import { useCrearTramo } from '../api'
-import { deInputLocal } from '../formato'
+import { deInputLocal } from '@/lib/formato'
 import { aEwkt, ErrorTrazado, invertir, parsearTrazado, type Trazado } from './trazado'
 
 type Props = { eventoId: string; ordenSugerido: number }

@@ -7,7 +7,7 @@ import type { TramoPublico } from '@/lib/tipos'
 import type { AccionModeracion, MOTIVOS, Pendiente } from './api'
 import type { ModoModeracion } from './atajos'
 import { Alertas } from './Alertas'
-import { horaCorta } from './formato'
+import { horaCorta } from '@/lib/formato'
 
 type Props = {
   publicacion: Pendiente

@@ -36,6 +36,21 @@ export function useTramosPublicos(eventoId: string | undefined) {
   })
 }
 
+export function useTramoPublico(tramoId: string) {
+  return useQuery({
+    queryKey: ['publico', 'tramo', tramoId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('tramos_publicos')
+        .select('*')
+        .eq('id', tramoId)
+        .maybeSingle()
+      if (error) throw error
+      return data as TramoPublico | null
+    },
+  })
+}
+
 export type InscritoPublico = Pick<Inscrito, 'numero' | 'piloto' | 'copiloto' | 'auto' | 'clase'>
 
 export function useInscritosPublicos(eventoId: string | undefined) {

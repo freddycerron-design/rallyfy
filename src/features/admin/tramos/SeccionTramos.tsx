@@ -4,7 +4,7 @@ import { Aviso, Boton, Cargando, Selector, Tarjeta } from '@/components/ui'
 import { mensajeError } from '@/lib/errores'
 import type { EstadoTramo } from '@/lib/tipos'
 import { useActualizarTramo, useEliminarTramo, useTramos } from '../api'
-import { formatearFechaHora } from '../formato'
+import { formatearFechaHora } from '@/lib/formato'
 import { FormularioTramo } from './FormularioTramo'
 
 const nombreEstado: Record<EstadoTramo, string> = {

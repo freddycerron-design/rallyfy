@@ -25,3 +25,7 @@ export function aInputLocal(iso: string | null): string {
 /** Valor de <input type="datetime-local"> (hora local) → ISO, o null si está vacío. */
 export const deInputLocal = (valor: string): string | null =>
   valor ? new Date(valor).toISOString() : null
+
+const hora = new Intl.DateTimeFormat('es-419', { hour: '2-digit', minute: '2-digit' })
+
+export const horaCorta = (iso: string) => hora.format(new Date(iso))
