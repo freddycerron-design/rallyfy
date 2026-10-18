@@ -248,11 +248,17 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 >
 > **Sin verificar:** tocar los pines dibujados con WebGL. Se revisó con capturas, pero no se puede automatizar por rol accesible.
 
-### Fase 7 — Votos y "En vivo ahora"
+### Fase 7 — Votos y "En vivo ahora" ✔️ completada (2026-10-17)
 1. Botón de voto optimista con las RPC `votar` y `quitar_voto`, y el límite de 60 por hora en la RPC.
 2. Tarjeta "en vivo" que abre la red social en una pestaña nueva y desaparece al vencer.
 
 🧪 pgTAP: se admite un voto por usuario y el contador queda consistente.
+
+> **Estado:**
+> - **Botón de voto optimista** en cada tarjeta: toma el conteo que devuelve la RPC y vuelve atrás si hay error (por ejemplo, el límite de 60 por hora).
+> - **Sesión anónima bajo demanda** (`SesionAnonimaProvider`): un solo widget de Turnstile y solo la primera vez que alguien vota. Quien solo mira no crea usuarios.
+> - **"En vivo ahora" en el muro y el inicio:** la transmisión desaparece al vencer aunque la página quede abierta (`estaEnVivo` y `useAhora`), y sigue en el muro como tarjeta que abre la red social.
+> - **Pruebas:** unitarias de `estaEnVivo` y 3 e2e (votar y quitar con una sola sesión, límite con aviso y vencimiento con reloj simulado).
 
 ### Fase 8 — PWA, operación y documentación
 1. vite-plugin-pwa: manifest, íconos y caché del app shell. Las teselas y la API **no** se cachean de forma agresiva. Aviso offline.

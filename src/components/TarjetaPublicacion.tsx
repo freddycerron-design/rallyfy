@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { BotonVoto } from '@/components/BotonVoto'
 import { Video } from '@/components/video/Video'
 import { horaCorta } from '@/lib/formato'
 import type { PublicacionMuro } from '@/lib/muro'
@@ -54,7 +55,7 @@ export function TarjetaPublicacion({ publicacion: p, conTramo = false, autoResal
         ))}
         <span className="ml-auto flex items-center gap-3 text-gray-600">
           {p.alias && <span>por {p.alias}</span>}
-          <span aria-label={`${p.votos} votos`}>♥ {p.votos}</span>
+          <BotonVoto publicacionId={p.id} votos={p.votos} />
         </span>
       </footer>
     </article>

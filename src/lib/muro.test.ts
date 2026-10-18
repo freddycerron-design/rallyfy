@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ordenarMuro, type PublicacionMuro } from './muro'
+import { estaEnVivo, ordenarMuro, type PublicacionMuro } from './muro'
 
 const pub = (id: string, extra: Partial<PublicacionMuro> = {}): PublicacionMuro => ({
   id,
@@ -51,5 +51,26 @@ describe('ordenarMuro', () => {
     const copia = [...datos]
     ordenarMuro(datos, 'votos')
     expect(datos).toEqual(copia)
+  })
+})
+
+describe('estaEnVivo', () => {
+  const ahora = Date.parse('2026-10-17T15:00:00Z')
+  const vivo = pub('v', {
+    es_en_vivo: true,
+    en_vivo_ahora: true,
+    en_vivo_hasta: '2026-10-17T15:30:00Z',
+  })
+
+  it('sigue en vivo antes de vencer', () => {
+    expect(estaEnVivo(vivo, ahora)).toBe(true)
+  })
+
+  it('deja de estarlo al vencer aunque el servidor lo haya marcado', () => {
+    expect(estaEnVivo(vivo, Date.parse('2026-10-17T15:31:00Z'))).toBe(false)
+  })
+
+  it('una publicación común nunca está en vivo', () => {
+    expect(estaEnVivo(pub('x'), ahora)).toBe(false)
   })
 })

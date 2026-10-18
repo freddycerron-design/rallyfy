@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
 import { RouterProvider } from 'react-router'
+import { SesionAnonimaProvider } from '@/components/SesionAnonimaProvider'
 import { crearRouter } from './router'
 
 export function App() {
@@ -21,7 +22,9 @@ export function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <SesionAnonimaProvider>
+        <RouterProvider router={router} />
+      </SesionAnonimaProvider>
     </QueryClientProvider>
   )
 }

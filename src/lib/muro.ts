@@ -179,3 +179,29 @@ export function useUltimosVistos(eventoId: string | undefined, sondeo: boolean) 
     },
   })
 }
+
+/**
+ * Sigue en vivo: el servidor lo marcó así al consultar y todavía no venció en este reloj.
+ * Así una transmisión desaparece aunque la página quede abierta sin recargar.
+ */
+export const estaEnVivo = (p: PublicacionMuro, ahora: number) =>
+  p.en_vivo_ahora && !!p.en_vivo_hasta && Date.parse(p.en_vivo_hasta) > ahora
+
+/** Transmisiones activas de todo el evento (para el inicio). */
+export function useEnVivoEvento(eventoId: string | undefined) {
+  return useQuery({
+    queryKey: ['muro', eventoId, 'en-vivo'],
+    enabled: !!eventoId,
+    refetchInterval: 60_000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('muro_publico')
+        .select('*')
+        .eq('evento_id', eventoId!)
+        .eq('en_vivo_ahora', true)
+        .order('tramo_orden')
+      if (error) throw error
+      return data as PublicacionMuro[]
+    },
+  })
+}

@@ -4,10 +4,16 @@ import { Aviso, Cargando } from '@/components/ui'
 import { useEventoActivo, useTramosPublicos } from '@/lib/consultasPublicas'
 import { mensajeError } from '@/lib/errores'
 import { formatearFecha, formatearFechaHora } from '@/lib/formato'
+import { estaEnVivo, useEnVivoEvento } from '@/lib/muro'
+import { useAhora } from '@/lib/useAhora'
+import { Video } from '@/components/video/Video'
 
 export function PaginaInicio() {
   const evento = useEventoActivo()
   const tramos = useTramosPublicos(evento.data?.id)
+  const enVivo = useEnVivoEvento(evento.data?.id)
+  const ahora = useAhora()
+  const transmisiones = (enVivo.data ?? []).filter((p) => estaEnVivo(p, ahora))
 
   if (evento.isPending) return <Cargando />
   if (evento.isError) return <Aviso tipo="error">{mensajeError(evento.error)}</Aviso>
@@ -40,6 +46,32 @@ export function PaginaInicio() {
         <span aria-hidden>📹</span> Enviar mi video
       </Link>
 
+      {transmisiones.length > 0 && (
+        <section aria-labelledby="inicio-en-vivo" className="space-y-2">
+          <h2
+            id="inicio-en-vivo"
+            className="flex items-center gap-2 text-lg font-semibold text-red-700"
+          >
+            <span aria-hidden className="size-2.5 animate-pulse rounded-full bg-red-600" />
+            En vivo ahora
+          </h2>
+          <ul className="space-y-2">
+            {transmisiones.map((p) => (
+              <li key={p.id}>
+                <Video
+                  plataforma={p.plataforma}
+                  idExterno={p.id_externo}
+                  esEnVivo
+                  urlCanonica={p.url_canonica}
+                  titulo={`${p.tramo_codigo}${p.km_en_tramo != null ? ` · km ${Number(p.km_en_tramo).toFixed(1)}` : ''}`}
+                  autor={p.alias ?? p.autor}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <div className="space-y-3">
         <h2 className="text-lg font-semibold">Tramos</h2>
         {tramos.isPending && <Cargando />}
@@ -47,7 +79,7 @@ export function PaginaInicio() {
         {tramos.data?.length === 0 && (
           <p className="text-gray-600">Todavía no se cargaron los tramos.</p>
         )}
-        <ul className="space-y-2">
+        <ul className="space-y-2" aria-label="Tramos">
           {tramos.data?.map((t) => (
             <li key={t.id}>
               <Link

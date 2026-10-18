@@ -6,7 +6,14 @@ import { Aviso, Cargando } from '@/components/ui'
 import { Video } from '@/components/video/Video'
 import { useTramoPublico } from '@/lib/consultasPublicas'
 import { mensajeError } from '@/lib/errores'
-import { type OrdenMuro, ordenarMuro, useMuroEnTiempoReal, useMuroTramo } from '@/lib/muro'
+import {
+  estaEnVivo,
+  type OrdenMuro,
+  ordenarMuro,
+  useMuroEnTiempoReal,
+  useMuroTramo,
+} from '@/lib/muro'
+import { useAhora } from '@/lib/useAhora'
 
 const ORDENES: { valor: OrdenMuro; texto: string }[] = [
   { valor: 'km', texto: 'Por km' },
@@ -68,18 +75,19 @@ function Muro({ tramoId, eventoId }: { tramoId: string; eventoId: string }) {
     setParams(nuevos, { replace: true })
   }
 
+  const ahora = useAhora()
   const { enVivo, lista, autosPresentes } = useMemo(() => {
     const todas = muro.data ?? []
     const filtradas = auto ? todas.filter((p) => p.autos.includes(auto)) : todas
     return {
-      enVivo: filtradas.filter((p) => p.en_vivo_ahora),
+      enVivo: filtradas.filter((p) => estaEnVivo(p, ahora)),
       lista: ordenarMuro(
-        filtradas.filter((p) => !p.en_vivo_ahora),
+        filtradas.filter((p) => !estaEnVivo(p, ahora)),
         orden,
       ),
       autosPresentes: [...new Set(todas.flatMap((p) => p.autos))].sort((a, b) => a - b),
     }
-  }, [muro.data, auto, orden])
+  }, [muro.data, auto, orden, ahora])
 
   if (muro.isPending) return <Cargando />
   if (muro.isError) return <Aviso tipo="error">{mensajeError(muro.error)}</Aviso>

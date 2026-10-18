@@ -67,6 +67,8 @@ const MURO_TC1 = [
     url_canonica: 'https://www.tiktok.com/@fan/live',
     es_en_vivo: true,
     en_vivo_ahora: true,
+    // Lejano a propósito: la prueba no depende de la hora en que corre.
+    en_vivo_hasta: '2099-01-01T00:00:00Z',
     autos: [],
   }),
 ]
@@ -134,10 +136,15 @@ test('inicio lista los tramos con estado y cantidad de videos', async ({ page })
   ).toBeVisible()
   await expect(page.getByRole('link', { name: 'Enviar mi video' })).toBeVisible()
 
-  const tc2 = page.getByRole('link', { name: /TC2/ })
+  await expect(
+    page.getByRole('region', { name: 'En vivo ahora' }).getByRole('link', { name: /EN VIVO/ }),
+  ).toHaveAttribute('href', 'https://www.tiktok.com/@fan/live')
+
+  const tramos = page.getByRole('list', { name: 'Tramos' })
+  const tc2 = tramos.getByRole('link', { name: /TC2/ })
   await expect(tc2).toContainText('Por iniciar')
   await expect(tc2).toContainText('1 video')
-  await page.getByRole('link', { name: /TC1/ }).click()
+  await tramos.getByRole('link', { name: /TC1/ }).click()
   await expect(page).toHaveURL(new RegExp(`/tramo/${TC1}$`))
 })
 
