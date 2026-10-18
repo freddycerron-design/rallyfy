@@ -11,6 +11,9 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${puerto}`,
     trace: 'on-first-retry',
+    // El service worker podría responder antes que las APIs simuladas con page.route.
+    // La PWA se prueba aparte (e2e/pwa.spec.ts) con el service worker habilitado.
+    serviceWorkers: 'block',
   },
   // Mobile-first: el escenario principal es un celular en el borde del camino.
   projects: [{ name: 'movil', use: { ...devices['Pixel 7'] } }],

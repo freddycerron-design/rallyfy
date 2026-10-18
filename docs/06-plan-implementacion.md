@@ -260,7 +260,7 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 > - **"En vivo ahora" en el muro y el inicio:** la transmisión desaparece al vencer aunque la página quede abierta (`estaEnVivo` y `useAhora`), y sigue en el muro como tarjeta que abre la red social.
 > - **Pruebas:** unitarias de `estaEnVivo` y 3 e2e (votar y quitar con una sola sesión, límite con aviso y vencimiento con reloj simulado).
 
-### Fase 8 — PWA, operación y documentación
+### Fase 8 — PWA, operación y documentación ✔️ completada (2026-10-17), salvo el despliegue
 1. vite-plugin-pwa: manifest, íconos y caché del app shell. Las teselas y la API **no** se cachean de forma agresiva. Aviso offline.
 2. `keepalive.yml`: cron dos veces por semana con una consulta liviana a `tramos_publicos`, más un commit mensual automático o una alerta para que GitHub no desactive el workflow a los 60 días.
 3. README: Supabase, PostGIS, migraciones, variables de entorno, Turnstile, SMTP y Cloudflare Pages (build `npm run build`, salida `dist`, rutas SPA).
@@ -268,6 +268,37 @@ Convención: cada tarea dura medio día como máximo. ✅ indica el criterio de 
 5. Auditoría de Lighthouse en móvil (PWA, accesibilidad, rendimiento) y repaso de los 7 criterios de §13.
 
 ✅ La app queda desplegada en Cloudflare Pages contra Supabase en la nube, con todos los criterios de §13 verificados.
+
+> **Estado:**
+> - **PWA** con vite-plugin-pwa: manifest, íconos (incluido el maskable), service worker con caché del app shell y caché moderada de teselas y miniaturas. Quedan fuera del precache MapLibre y las pantallas del equipo.
+>   - Las e2e de PWA encontraron un error real: el manifest repetido en el precache hacía fallar Workbox (`add-to-cache-list-conflicting-entries`) y dejaba el service worker activo pero sin caché. Está corregido.
+> - `public/_headers` para Cloudflare Pages (caché inmutable de assets, `sw.js` sin caché y cabeceras de seguridad).
+> - Workflow `keepalive.yml` (lunes y jueves), probado contra el proyecto real: responde 200.
+> - README de despliegue completo y `docs/08-operacion-dia-rally.md`.
+> - **Lighthouse móvil** (4G lenta simulada), en inicio, envío y mapa: Accesibilidad 100, Buenas prácticas 100, Rendimiento 80–90.
+>   - El JS inicial (~570 kB, 167 kB comprimido) lo domina `supabase-js`.
+>   - Mejora futura posible: lecturas públicas con `fetch` directo a PostgREST, sin `supabase-js`.
+>
+> **Pendiente (requiere tu cuenta de Cloudflare):**
+> - Conectar el repo a Cloudflare Pages.
+> - Crear el sitio de Turnstile real.
+> - Configurar las variables del keepalive en GitHub.
+>
+> Ver la sección Despliegue del README.
+
+## 8. Repaso final de los criterios de aceptación (§13)
+
+| Criterio | Estado | Evidencia |
+|---|---|---|
+| Envío desde el celular en menos de 30 s | ✅ simulado | e2e `envio.spec.ts`: flujo completo en unos 3 s (con API simulada) |
+| Un duplicado no genera otra publicación | ✅ | UNIQUE por evento, pgTAP 01 y 04, lógica `envio.test.ts` y e2e del 409 |
+| No aparece en muro ni mapa hasta aprobarse | ✅ | Vista `muro_publico` (pgTAP 01 y 02), que es la única fuente del muro y el mapa |
+| El muro por km sigue el recorrido | ✅ | `lib/muro.test.ts` y e2e `muro.spec.ts` |
+| El mapa nunca muestra la coordenada exacta | ✅ | pgTAP 01 (el punto público está sobre el trazado) y e2e del mapa (nunca consulta `publicaciones`) |
+| Un anónimo no puede aprobar ni leer datos privados por la API | ✅ real | pgTAP 02 en la CI y verificación contra el proyecto real con la publishable key (`42501`) |
+| Todo opera en planes gratuitos | ✅ diseño | Supabase Free, Cloudflare Pages y Turnstile, OpenFreeMap y GitHub Actions; límites y planes B en `docs/08` |
+
+**Falta validar con uso real:** un día de rally con varios moderadores y aficionados en paralelo. Realtime, egress y moderación en la nube se probaron solo de forma puntual.
 
 ---
 

@@ -1,0 +1,38 @@
+# Evita que Supabase (plan gratuito) pause el proyecto tras 7 días sin actividad.
+# Hace una consulta liviana a una vista pública dos veces por semana.
+#
+# Requiere dos variables del repositorio (Settings → Secrets and variables → Actions →
+# Variables), ambas públicas:
+#   SUPABASE_URL              https://<ref>.supabase.co
+#   SUPABASE_PUBLISHABLE_KEY  sb_publishable_…
+#
+# Ojo: GitHub desactiva los workflows programados tras 60 días sin actividad en el repo.
+# Ver docs/08-operacion-dia-rally.md (revisión mensual).
+name: Keepalive Supabase
+
+on:
+  schedule:
+    - cron: '17 12 * * 1,4' # lunes y jueves, 12:17 UTC
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Consultar tramos_publicos
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_PUBLISHABLE_KEY" ]; then
+            echo "::error::Faltan las variables SUPABASE_URL y SUPABASE_PUBLISHABLE_KEY"
+            exit 1
+          fi
+          estado=$(curl -s -o /dev/null -w '%{http_code}' --retry 3 --retry-delay 10 \
+            "$SUPABASE_URL/rest/v1/tramos_publicos?select=id&limit=1" \
+            -H "apikey: $SUPABASE_PUBLISHABLE_KEY")
+          echo "Respuesta: $estado"
+          test "$estado" = "200"

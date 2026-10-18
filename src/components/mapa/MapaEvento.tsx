@@ -13,7 +13,7 @@ import {
   encuadrar,
   FUENTE_TRAZADOS,
   type LineaMapa,
-} from './base'
+} from './mapaBase'
 
 export type PinMapa = { id: string; lon: number; lat: number }
 /** Autos en un mismo punto (aparecen juntos en el mismo video) van en un solo marcador. */

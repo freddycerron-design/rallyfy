@@ -17,9 +17,9 @@ describe('router', () => {
   it.each([
     ['/mapa', 'Mapa'],
     ['/enviar', 'Enviar mi video'],
-  ])('muestra la página de %s', (ruta, titulo) => {
+  ])('muestra la página de %s', async (ruta, titulo) => {
     renderEn(ruta)
-    expect(screen.getByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
   })
 
   it.each(['/', '/tramo/abc', '/auto/7'])('%s carga datos sin caer en 404', (ruta) => {

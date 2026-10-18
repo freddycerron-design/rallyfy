@@ -7,7 +7,7 @@ import {
   encuadrar,
   FUENTE_TRAZADOS,
   type LineaMapa,
-} from './base'
+} from './mapaBase'
 
 export type { LineaMapa }
 

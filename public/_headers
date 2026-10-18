@@ -1,0 +1,21 @@
+# Cabeceras para Cloudflare Pages (https://developers.cloudflare.com/pages/configuration/headers/).
+# Sin 404.html en el build, Pages sirve index.html en cualquier ruta (modo SPA).
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  # La geolocalización solo la usa esta app (envío); cámara y micrófono, nadie.
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=()
+
+# Archivos con hash en el nombre: se pueden guardar para siempre.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# El service worker y su registro deben revisarse siempre, para que las actualizaciones lleguen.
+/sw.js
+  Cache-Control: no-cache
+/registerSW.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache

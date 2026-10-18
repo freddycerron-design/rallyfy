@@ -1,9 +1,5 @@
 import { createBrowserRouter, type RouteObject } from 'react-router'
-import { PaginaAuto } from '@/features/autos/PaginaAuto'
-import { PaginaEnvio } from '@/features/envio/PaginaEnvio'
 import { PaginaInicio } from '@/features/inicio/PaginaInicio'
-import { PaginaMapa } from '@/features/mapa/PaginaMapa'
-import { PaginaMuro } from '@/features/muro/PaginaMuro'
 import { Cargando } from '@/components/ui'
 import { Layout } from './Layout'
 import { PaginaError, PaginaNoEncontrada } from './PaginasError'
@@ -15,11 +11,27 @@ export const rutas: RouteObject[] = [
     // Se muestra mientras se descarga una ruta diferida en la primera carga.
     HydrateFallback: () => <Cargando />,
     children: [
+      // El inicio va en el bundle principal; el resto se descarga al visitarlo, para que la
+      // primera carga con poca señal sea lo más liviana posible.
       { index: true, element: <PaginaInicio /> },
-      { path: 'tramo/:tramoId', element: <PaginaMuro /> },
-      { path: 'mapa', element: <PaginaMapa /> },
-      { path: 'auto/:numero', element: <PaginaAuto /> },
-      { path: 'enviar', element: <PaginaEnvio /> },
+      {
+        path: 'tramo/:tramoId',
+        lazy: async () => ({ Component: (await import('@/features/muro/PaginaMuro')).PaginaMuro }),
+      },
+      {
+        path: 'mapa',
+        lazy: async () => ({ Component: (await import('@/features/mapa/PaginaMapa')).PaginaMapa }),
+      },
+      {
+        path: 'auto/:numero',
+        lazy: async () => ({ Component: (await import('@/features/autos/PaginaAuto')).PaginaAuto }),
+      },
+      {
+        path: 'enviar',
+        lazy: async () => ({
+          Component: (await import('@/features/envio/PaginaEnvio')).PaginaEnvio,
+        }),
+      },
       // Pantallas del equipo: se descargan solo cuando se visitan.
       {
         path: 'moderacion',
